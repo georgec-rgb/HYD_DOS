@@ -28,21 +28,23 @@ body {
 
 /* ================= HEADER ================= */
 #header-wrap {
-  padding: 16px 20px;
+  padding: 20px 20px;
   background: white;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 16px;
 }
 
 #header-wrap img {
-  height: 50px;
+  height: 80px;
+  width: auto;
+  object-fit: contain;
 }
 
 #main-title {
-  font-size: 30px;
+  font-size: 32px;
   font-weight: 700;
   color: var(--oh-orange);
   margin: 0;
@@ -51,7 +53,7 @@ body {
 }
 
 #subtitle {
-  font-size: 14px;
+  font-size: 15px;
   color: #666;
   margin-top: 4px;
   width: 100%;
@@ -206,6 +208,17 @@ tbody tr:hover {
   background: #fffaf5;
 }
 
+/* Hide print header row on screen, show in print */
+.print-header {
+  display: none;
+}
+
+@media print {
+  .print-header {
+    display: table-row !important;
+  }
+}
+
 .loading,
 .error,
 .no-results {
@@ -222,20 +235,20 @@ tbody tr:hover {
 /* ================= RESPONSIVE ================= */
 @media (max-width: 768px) {
   #header-wrap {
-    padding: 12px;
+    padding: 16px 12px;
   }
 
   #header-wrap img {
-    height: 40px;
+    height: 60px;
   }
 
   #main-title {
-    font-size: 20px;
+    font-size: 22px;
     min-width: auto;
   }
 
   #subtitle {
-    font-size: 12px;
+    font-size: 13px;
   }
   
   #filters {
@@ -282,7 +295,29 @@ tbody tr:hover {
     background: white;
   }
 
-  #header-wrap,
+  /* Show header with logo in print */
+  #header-wrap {
+    display: flex !important;
+    padding: 10px 0;
+    box-shadow: none;
+    border-bottom: 3px solid var(--oh-orange);
+    margin-bottom: 20px;
+    page-break-after: avoid;
+  }
+
+  #header-wrap img {
+    height: 60px !important;
+  }
+
+  #main-title {
+    font-size: 24pt;
+  }
+
+  #subtitle {
+    font-size: 11pt;
+    color: #444;
+  }
+
   #filters,
   #printBtn,
   #locationBtn,
@@ -511,6 +546,21 @@ tbody tr:hover {
             <div class="table-wrap">
               <table>
                 <thead>
+                  <tr class="print-header">
+                    <th colspan="13" style="background: white; border-bottom: 2px solid var(--oh-orange); padding: 12px 8px;">
+                      <div style="display:flex; align-items:center; gap:12px;">
+                        <img src="logo.png" style="height:40px;" alt="Orange Health Labs">
+                        <div style="flex:1;">
+                          <div style="font-size:16px;color:#ff6600;font-weight:700;line-height:1.2;">
+                            Orange Health Labs – Directory of Services
+                          </div>
+                          <div style="font-size:11px;color:#666;font-weight:400;margin-top:2px;">
+                            ${dep} Department
+                          </div>
+                        </div>
+                      </div>
+                    </th>
+                  </tr>
                   <tr>
                     <th>#</th>
                     <th>Test Name</th>
