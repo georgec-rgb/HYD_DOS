@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Directory of Services – Orange Health Labs</title>
+
+<link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==" type="image/png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --oh-orange: #ff6600;
+  --oh-light: #fff7f2;
+  --oh-border: #e3e3e3;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Inter, sans-serif;
+  margin: 0;
+  color: #222;
+  background: #fafafa;
+}
+
+/* ================= HEADER ================= */
+#header-wrap {
+  padding: 16px 20px;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+#main-title {
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--oh-orange);
+  margin: 0;
+}
+
+#subtitle {
+  font-size: 14px;
+  color: #666;
+  margin-top: 4px;
+}
+
+/* ================= FLOATING BUTTONS ================= */
+#locationBtn {
+  position: fixed;
+  right: 20px;
+  top: 20px;
+  background: #333;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  transition: all 0.2s;
+}
+
+#locationBtn:hover {
+  background: #555;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+#printBtn {
+  position: fixed;
+  right: 20px;
+  top: 70px;
+  background: var(--oh-orange);
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(255,102,0,0.3);
+  transition: all 0.2s;
+}
+
+#printBtn:hover {
+  background: #ff7700;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255,102,0,0.4);
+}
+
+/* ================= FILTER BAR ================= */
+#filters {
+  position: sticky;
+  top: 0;
+  background: #fff;
+  border-bottom: 2px solid var(--oh-orange);
+  padding: 16px 20px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  z-index: 50;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+#filters input,
+#filters select {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--oh-border);
+  font-size: 14px;
+  min-width: 180px;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+#filters input:focus,
+#filters select:focus {
+  outline: none;
+  border-color: var(--oh-orange);
+}
+
+#filters button {
+  padding: 10px 20px;
+  border-radius: 8px;
+  background: var(--oh-orange);
+  color: white;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+#filters button:hover {
+  background: #ff7700;
+  transform: translateY(-1px);
+}
+
+.stats {
+  width: 100%;
+  padding: 8px 0;
+  color: #666;
+  font-size: 13px;
+}
+
+/* ================= TABLE ================= */
+.dept-block {
+  padding: 24px 20px 0;
+  background: white;
+  margin: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.dept-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--oh-orange);
+  border-bottom: 3px solid var(--oh-orange);
+  display: inline-block;
+  padding-bottom: 8px;
+  margin-bottom: 16px;
+}
+
+.table-wrap {
+  padding: 0 20px 24px;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+th, td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--oh-border);
+  font-size: 13px;
+  vertical-align: top;
+  text-align: left;
+}
+
+th {
+  background: var(--oh-light);
+  border-bottom: 2px solid var(--oh-orange);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+tbody tr:hover {
+  background: #fffaf5;
+}
+
+.loading,
+.error,
+.no-results {
+  padding: 60px 20px;
+  text-align: center;
+  color: #999;
+  font-size: 16px;
+}
+
+.error {
+  color: #d32f2f;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+  #main-title {
+    font-size: 24px;
+  }
+  
+  #filters {
+    padding: 12px;
+  }
+  
+  #filters input,
+  #filters select {
+    min-width: 100%;
+  }
+  
+  #locationBtn,
+  #printBtn {
+    right: 12px;
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+  
+  #printBtn {
+    top: 60px;
+  }
+  
+  .dept-block {
+    margin: 12px;
+    border-radius: 8px;
+  }
+  
+  table {
+    font-size: 11px;
+  }
+  
+  th, td {
+    padding: 6px 8px;
+  }
+}
+
+/* ================= PRINT ================= */
+@media print {
+  @page {
+    margin: 12mm;
+  }
+
+  body {
+    background: white;
+  }
+
+  #header-wrap,
+  #filters,
+  #printBtn,
+  #locationBtn,
+  .stats {
+    display: none !important;
+  }
+
+  .dept-block {
+    box-shadow: none;
+    margin: 0;
+    page-break-inside: avoid;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  tr {
+    page-break-inside: avoid;
+  }
+
+  table {
+    font-size: 9pt;
+  }
+
+  th, td {
+    padding: 4px 6px;
+  }
+
+  .print-footer {
+    position: fixed;
+    bottom: 8mm;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 9px;
+    font-weight: 600;
+    color: #666;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="print-footer">Orange Health Labs - Directory of Services</div>
+
+<button id="locationBtn">OHL HYD Ameerpet</button>
+<button id="printBtn" onclick="window.print()">🖨️ Print DOS</button>
+
+<!-- HEADER -->
+<div id="header-wrap">
+  <h1 id="main-title">🧪 Orange Health – Directory of Services</h1>
+  <div id="subtitle">Comprehensive laboratory test catalog with filtering and search</div>
+</div>
+
+<!-- FILTERS -->
+<div id="filters">
+  <input id="searchBox" type="text" placeholder="🔍 Search test / investigation / method..." autocomplete="off">
+  
+  <select id="deptFilter">
+    <option value="">📁 Department: All</option>
+  </select>
+  
+  <select id="nablFilter">
+    <option value="">🏆 NABL: All</option>
+    <option value="yes">✅ NABL: Yes</option>
+    <option value="no">❌ NABL: No</option>
+  </select>
+  
+  <select id="cityFilter">
+    <option value="">🏙️ City: All</option>
+  </select>
+  
+  <button onclick="window.resetFilters()">🔄 Reset Filters</button>
+  
+  <div class="stats" id="statsDisplay"></div>
+</div>
+
+<div id="dosContainer">
+  <div class="loading">⏳ Loading data from data.json...</div>
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  // Utility: Format testing frequency
+  function formatFrequency(freq) {
+    const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    return String(freq).split("")
+      .map((v, i) => v === "1" ? days[i] : "")
+      .filter(Boolean)
+      .join(" ");
+  }
+
+  // Global reset function
+  window.resetFilters = function() {
+    document.getElementById('searchBox').value = "";
+    document.getElementById('deptFilter').value = "";
+    document.getElementById('nablFilter').value = "";
+    document.getElementById('cityFilter').value = "";
+    if (window.applyFilters) window.applyFilters();
+  };
+
+  // Main initialization
+  function initializeApp(data) {
+    const grouped = {};
+    let totalRows = 0;
+
+    // Group data by ORANGE_TEST_ID
+    data.forEach(row => {
+      if (row.STATUS !== 1) return;
+      totalRows++;
+
+      const id = row.ORANGE_TEST_ID;
+
+      if (!grouped[id]) {
+        grouped[id] = {
+          test_name: row.TEST_NAME || "Unnamed Test",
+          department: row.DEPARTMENT || "Uncategorized",
+          investigations: new Set(),
+          methods: new Set(),
+          sample: row.SAMPLE_NAME || "-",
+          container: row.VIAL_TYPE || "-",
+          fasting: row.IS_FASTING_REQUIRED === 1 ? "Yes" : "No",
+          nabl: false,
+          frequency: formatFrequency(row.TESTING_FREQUENCY),
+          tat: row.LAB_TAT || "-",
+          lab: row.LAB_NAME || "-",
+          city: row.CITY_CODE || "-",
+          price: row.PRICE || "-"
+        };
+      }
+
+      // NABL aggregation (ANY Yes → Yes)
+      grouped[id].nabl = grouped[id].nabl || 
+        String(row.IS_NABL_ACCREDITED).toUpperCase() === "YES";
+
+      // Add investigation name
+      const invName = row.INVESTIGATION_NAME?.trim();
+      if (invName) {
+        grouped[id].investigations.add(invName);
+      }
+
+      // Add method description
+      const methodDesc = row.METHOD_DESCRIPTION?.trim();
+      if (methodDesc) {
+        grouped[id].methods.add(methodDesc);
+      }
+    });
+
+    const tests = Object.values(grouped);
+    console.log(`Loaded ${totalRows} rows → ${tests.length} unique tests`);
+
+    // Populate filters
+    const deptFilter = document.getElementById('deptFilter');
+    const cityFilter = document.getElementById('cityFilter');
+
+    [...new Set(tests.map(t => t.department))].sort()
+      .forEach(d => deptFilter.add(new Option(d, d)));
+
+    [...new Set(tests.map(t => t.city))].sort()
+      .forEach(c => cityFilter.add(new Option(c, c)));
+
+    // Apply filters function
+    window.applyFilters = function() {
+      const searchBox = document.getElementById('searchBox');
+      const deptFilter = document.getElementById('deptFilter');
+      const cityFilter = document.getElementById('cityFilter');
+      const nablFilter = document.getElementById('nablFilter');
+      const dosContainer = document.getElementById('dosContainer');
+      const statsDisplay = document.getElementById('statsDisplay');
+
+      const byDept = {};
+      let rowNum = 1;
+      const q = searchBox.value.trim().toLowerCase();
+
+      tests.forEach(t => {
+        // Search filter
+        if (q) {
+          const haystack = `
+            ${t.test_name}
+            ${[...t.investigations].join(" ")}
+            ${[...t.methods].join(" ")}
+          `.toLowerCase();
+          if (!haystack.includes(q)) return;
+        }
+
+        // Department filter
+        if (deptFilter.value && t.department !== deptFilter.value) return;
+
+        // City filter
+        if (cityFilter.value && t.city !== cityFilter.value) return;
+
+        // NABL filter
+        if (nablFilter.value) {
+          if (nablFilter.value === "yes" && !t.nabl) return;
+          if (nablFilter.value === "no" && t.nabl) return;
+        }
+
+        (byDept[t.department] = byDept[t.department] || []).push({...t, _rowNumber: rowNum++});
+      });
+
+      // Update stats
+      const totalFiltered = rowNum - 1;
+      statsDisplay.textContent = `Showing ${totalFiltered} of ${tests.length} tests`;
+
+      dosContainer.innerHTML = "";
+
+      if (Object.keys(byDept).length === 0) {
+        dosContainer.innerHTML = '<div class="no-results">❌ No tests found matching your filters. Try adjusting your search criteria.</div>';
+        return;
+      }
+
+      // Render tables by department
+      Object.keys(byDept).sort().forEach(dep => {
+        const deptTests = byDept[dep];
+        
+        dosContainer.insertAdjacentHTML("beforeend", `
+          <div class="dept-block">
+            <div class="dept-title">${dep} <span style="font-size:16px;color:#999;font-weight:400;">(${deptTests.length} tests)</span></div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Test Name</th>
+                    <th>Investigations</th>
+                    <th>Methods</th>
+                    <th>Sample</th>
+                    <th>Container</th>
+                    <th>Fast</th>
+                    <th>NABL</th>
+                    <th>Frequency</th>
+                    <th>TAT (hrs)</th>
+                    <th>Lab</th>
+                    <th>City</th>
+                    <th>Price (₹)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${deptTests.map(t => `
+                    <tr>
+                      <td>${t._rowNumber}</td>
+                      <td><strong>${t.test_name}</strong></td>
+                      <td>${[...t.investigations].join(", ") || "-"}</td>
+                      <td>${[...t.methods].join(", ") || "-"}</td>
+                      <td>${t.sample}</td>
+                      <td>${t.container}</td>
+                      <td>${t.fasting}</td>
+                      <td>${t.nabl ? "✅ Yes" : "❌ No"}</td>
+                      <td>${t.frequency || "-"}</td>
+                      <td>${t.tat}</td>
+                      <td>${t.lab}</td>
+                      <td><strong>${t.city}</strong></td>
+                      <td><strong>${t.price}</strong></td>
+                    </tr>
+                  `).join("")}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        `);
+      });
+    };
+
+    // Bind filter events
+    document.getElementById('searchBox').addEventListener("input", window.applyFilters);
+    document.getElementById('deptFilter').addEventListener("change", window.applyFilters);
+    document.getElementById('nablFilter').addEventListener("change", window.applyFilters);
+    document.getElementById('cityFilter').addEventListener("change", window.applyFilters);
+
+    // Initial render
+    window.applyFilters();
+  }
+
+  // Load data from data.json
+  fetch("data.json")
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      if (!Array.isArray(data) || data.length === 0) {
+        throw new Error("Invalid data format or empty dataset");
+      }
+      initializeApp(data);
+    })
+    .catch(err => {
+      console.error('Error loading data:', err);
+      document.getElementById('dosContainer').innerHTML = `
+        <div class="error">
+          <h2>⚠️ Error Loading Data</h2>
+          <p><strong>${err.message}</strong></p>
+          <p>Please ensure:</p>
+          <ul style="text-align:left;display:inline-block;margin-top:12px;">
+            <li>The <code>data.json</code> file is in the same directory as this HTML file</li>
+            <li>The JSON file is properly formatted</li>
+            <li>You're accessing this page via HTTP/HTTPS (not file://)</li>
+          </ul>
+          <p style="margin-top:20px;"><a href="javascript:location.reload()" style="color:var(--oh-orange);font-weight:600;">🔄 Retry</a></p>
+        </div>
+      `;
+    });
+})();
+</script>
+
+</body>
+</html>
