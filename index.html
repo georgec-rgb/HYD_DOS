@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Directory of Services – Orange Health Labs</title>
 
-<link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==" type="image/png">
+<link rel="icon" href="file.png" type="image/png">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
@@ -31,6 +31,14 @@ body {
   padding: 16px 20px;
   background: white;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+#header-wrap img {
+  height: 50px;
 }
 
 #main-title {
@@ -38,12 +46,15 @@ body {
   font-weight: 700;
   color: var(--oh-orange);
   margin: 0;
+  flex: 1;
+  min-width: 300px;
 }
 
 #subtitle {
   font-size: 14px;
   color: #666;
   margin-top: 4px;
+  width: 100%;
 }
 
 /* ================= FLOATING BUTTONS ================= */
@@ -210,8 +221,21 @@ tbody tr:hover {
 
 /* ================= RESPONSIVE ================= */
 @media (max-width: 768px) {
+  #header-wrap {
+    padding: 12px;
+  }
+
+  #header-wrap img {
+    height: 40px;
+  }
+
   #main-title {
-    font-size: 24px;
+    font-size: 20px;
+    min-width: auto;
+  }
+
+  #subtitle {
+    font-size: 12px;
   }
   
   #filters {
@@ -311,8 +335,11 @@ tbody tr:hover {
 
 <!-- HEADER -->
 <div id="header-wrap">
-  <h1 id="main-title">🧪 Orange Health – Directory of Services</h1>
-  <div id="subtitle">Comprehensive laboratory test catalog with filtering and search</div>
+  <img src="logo.png" alt="Orange Health Labs">
+  <div>
+    <h1 id="main-title">Orange Health – Directory of Services</h1>
+    <div id="subtitle">Comprehensive laboratory test catalog with filtering and search</div>
+  </div>
 </div>
 
 <!-- FILTERS -->
