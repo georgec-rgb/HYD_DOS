@@ -288,36 +288,19 @@ tbody tr:hover {
 /* ================= PRINT ================= */
 @media print {
   @page {
-    margin: 12mm;
+    size: A4 landscape;
+    margin: 10mm 10mm 15mm 10mm;
   }
 
-  body {
+  html, body {
+    width: 100%;
+    height: auto;
     background: white;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 
-  /* Show header with logo in print */
-  #header-wrap {
-    display: flex !important;
-    padding: 10px 0;
-    box-shadow: none;
-    border-bottom: 3px solid var(--oh-orange);
-    margin-bottom: 20px;
-    page-break-after: avoid;
-  }
-
-  #header-wrap img {
-    height: 60px !important;
-  }
-
-  #main-title {
-    font-size: 24pt;
-  }
-
-  #subtitle {
-    font-size: 11pt;
-    color: #444;
-  }
-
+  /* Global screen elements hidden in print */
   #filters,
   #printBtn,
   #locationBtn,
@@ -325,37 +308,124 @@ tbody tr:hover {
     display: none !important;
   }
 
-  .dept-block {
-    box-shadow: none;
-    margin: 0;
-    page-break-inside: avoid;
+  /* Main page header */
+  #header-wrap {
+    display: flex !important;
+    padding: 8px 0 10px 0;
+    box-shadow: none !important;
+    border-bottom: 3px solid var(--oh-orange);
+    margin-bottom: 12px;
+    page-break-after: avoid;
+    break-after: avoid;
   }
 
+  #header-wrap img {
+    height: 50px !important;
+  }
+
+  #main-title {
+    font-size: 18pt;
+  }
+
+  #subtitle {
+    font-size: 10pt;
+    color: #444;
+  }
+
+  /* Department blocks — allow breaking across pages */
+  .dept-block {
+    box-shadow: none !important;
+    border: none !important;
+    margin: 0 0 16pt 0;
+    padding: 0;
+    border-radius: 0;
+    page-break-before: auto;
+    break-before: auto;
+    page-break-inside: auto;   /* ← allow large dept tables to break */
+    break-inside: auto;
+  }
+
+  .dept-title {
+    font-size: 13pt;
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  .table-wrap {
+    padding: 0;
+    overflow: visible !important;
+  }
+
+  /* Table layout */
+  table {
+    width: 100%;
+    table-layout: fixed;        /* ← forces all columns to respect defined widths */
+    border-collapse: collapse;
+    font-size: 7.5pt;
+    page-break-inside: auto;
+    break-inside: auto;
+  }
+
+  /* Column widths (total = 100%) — tuned for landscape A4 */
+  col.col-num        { width: 3%; }
+  col.col-testname   { width: 16%; }
+  col.col-invest     { width: 16%; }
+  col.col-method     { width: 12%; }
+  col.col-sample     { width: 7%; }
+  col.col-container  { width: 7%; }
+  col.col-fast       { width: 4%; }
+  col.col-nabl       { width: 4%; }
+  col.col-freq       { width: 9%; }
+  col.col-tat        { width: 5%; }
+  col.col-lab        { width: 8%; }
+  col.col-city       { width: 4%; }
+  col.col-price      { width: 5%; }
+
+  th, td {
+    padding: 4px 5px;
+    border: 0.5pt solid #ccc;
+    vertical-align: top;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;         /* ← allow wrapping in print */
+  }
+
+  th {
+    background-color: #fff7f2 !important;
+    border-bottom: 1.5pt solid var(--oh-orange) !important;
+    font-size: 7pt;
+    white-space: normal;
+  }
+
+  /* Repeat table header on every page */
   thead {
     display: table-header-group;
   }
 
-  tr {
+  tbody tr {
     page-break-inside: avoid;
+    break-inside: avoid;
   }
 
-  table {
-    font-size: 9pt;
+  /* Per-department print header row (logo + dept name) */
+  .print-header td,
+  .print-header th {
+    border-bottom: 1.5pt solid var(--oh-orange) !important;
+    padding: 6px 4px !important;
   }
 
-  th, td {
-    padding: 4px 6px;
-  }
-
+  /* Footer */
   .print-footer {
     position: fixed;
-    bottom: 8mm;
-    left: 0;
-    right: 0;
+    bottom: 5mm;
+    left: 10mm;
+    right: 10mm;
     text-align: center;
-    font-size: 9px;
+    font-size: 7pt;
     font-weight: 600;
-    color: #666;
+    color: #555;
+    border-top: 0.5pt solid #ccc;
+    padding-top: 3pt;
   }
 }
 </style>
@@ -363,7 +433,7 @@ tbody tr:hover {
 
 <body>
 
-<div class="print-footer">Created by: George Cyriac | Reviewed by: Palapu Srinitha | Approved by: Dr.Shruthi Sharma | Reviewed on: 2026-02-02 | Next Review on: 2027-02-02 </div>
+<div class="print-footer">Created by: George Cyriac | Reviewed by: Palapu Srinitha | Approved by: Dr.Shruthi Sharma | Reviewed on: 2026-02-02 | Next Review on: 2027-02-02</div>
 
 <button id="locationBtn">OHL HYD Ameerpet</button>
 <button id="printBtn" onclick="window.print()">🖨️ Print DOS</button>
@@ -425,6 +495,24 @@ tbody tr:hover {
     document.getElementById('cityFilter').value = "";
     if (window.applyFilters) window.applyFilters();
   };
+
+  // Column group HTML (used once per table for fixed widths in print)
+  const COLGROUP = `
+    <colgroup>
+      <col class="col-num">
+      <col class="col-testname">
+      <col class="col-invest">
+      <col class="col-method">
+      <col class="col-sample">
+      <col class="col-container">
+      <col class="col-fast">
+      <col class="col-nabl">
+      <col class="col-freq">
+      <col class="col-tat">
+      <col class="col-lab">
+      <col class="col-city">
+      <col class="col-price">
+    </colgroup>`;
 
   // Main initialization
   function initializeApp(data) {
@@ -545,16 +633,17 @@ tbody tr:hover {
             <div class="dept-title">${dep} <span style="font-size:16px;color:#999;font-weight:400;">(${deptTests.length} tests)</span></div>
             <div class="table-wrap">
               <table>
+                ${COLGROUP}
                 <thead>
                   <tr class="print-header">
-                    <th colspan="13" style="background: white; border-bottom: 2px solid var(--oh-orange); padding: 12px 8px;">
+                    <th colspan="13" style="background: white; border-bottom: 2px solid var(--oh-orange); padding: 8px;">
                       <div style="display:flex; align-items:center; gap:12px;">
-                        <img src="logo.png" style="height:40px;" alt="Orange Health Labs">
+                        <img src="logo.png" style="height:36px;" alt="Orange Health Labs">
                         <div style="flex:1;">
-                          <div style="font-size:16px;color:#ff6600;font-weight:700;line-height:1.2;">
+                          <div style="font-size:13pt;color:#ff6600;font-weight:700;line-height:1.2;">
                             Orange Health Labs – Directory of Services
                           </div>
-                          <div style="font-size:11px;color:#666;font-weight:400;margin-top:2px;">
+                          <div style="font-size:9pt;color:#666;font-weight:400;margin-top:2px;">
                             ${dep} Department
                           </div>
                         </div>
